@@ -8,4 +8,4 @@ Allow: /
 User-agent: Googlebot
 Allow: /
 
-Sitemap: https://polyshiplab.com/sitemap.xml
+Sitemap: https://vibecheck.polyshiplab.com/sitemap.xml

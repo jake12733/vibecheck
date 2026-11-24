@@ -4,7 +4,7 @@
  */
 window.VIBE_CONFIG = {
   // 1) 커스텀 도메인 구매 후 변경 (예: 'https://vibecheck.kr')
-  siteUrl: 'https://polyshiplab.com',
+  siteUrl: 'https://vibecheck.polyshiplab.com',
 
   // 2) 프리랜서 보안·리팩토링 의뢰 실제 수신 채널 (원하는 것 1개 이상 입력)
   contactEmail: '',           // 예: 'security@vibecheck.kr' (입력 시 mailto 자동 연동)

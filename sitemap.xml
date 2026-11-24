@@ -1,67 +1,67 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://polyshiplab.com/</loc>
+    <loc>https://vibecheck.polyshiplab.com/</loc>
     <lastmod>2026-11-25</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://polyshiplab.com/guides/</loc>
+    <loc>https://vibecheck.polyshiplab.com/guides/</loc>
     <lastmod>2026-11-25</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://polyshiplab.com/guides/leaked-api-key-github.html</loc>
+    <loc>https://vibecheck.polyshiplab.com/guides/leaked-api-key-github.html</loc>
     <lastmod>2026-11-25</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://polyshiplab.com/guides/vibe-coding-security-checklist.html</loc>
+    <loc>https://vibecheck.polyshiplab.com/guides/vibe-coding-security-checklist.html</loc>
     <lastmod>2026-11-25</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://polyshiplab.com/guides/nextjs-supabase-rls-guide.html</loc>
+    <loc>https://vibecheck.polyshiplab.com/guides/nextjs-supabase-rls-guide.html</loc>
     <lastmod>2026-11-25</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.85</priority>
   </url>
   <url>
-    <loc>https://polyshiplab.com/guides/xss-innerhtml-fix.html</loc>
+    <loc>https://vibecheck.polyshiplab.com/guides/xss-innerhtml-fix.html</loc>
     <lastmod>2026-11-25</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.85</priority>
   </url>
   <url>
-    <loc>https://polyshiplab.com/guides/fix-node-modules-git.html</loc>
+    <loc>https://vibecheck.polyshiplab.com/guides/fix-node-modules-git.html</loc>
     <lastmod>2026-11-25</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://polyshiplab.com/guides/github-pages-seo-naver-google.html</loc>
+    <loc>https://vibecheck.polyshiplab.com/guides/github-pages-seo-naver-google.html</loc>
     <lastmod>2026-11-25</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://polyshiplab.com/about.html</loc>
+    <loc>https://vibecheck.polyshiplab.com/about.html</loc>
     <lastmod>2026-11-25</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://polyshiplab.com/privacy.html</loc>
+    <loc>https://vibecheck.polyshiplab.com/privacy.html</loc>
     <lastmod>2026-11-25</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.4</priority>
   </url>
   <url>
-    <loc>https://polyshiplab.com/terms.html</loc>
+    <loc>https://vibecheck.polyshiplab.com/terms.html</loc>
     <lastmod>2026-11-25</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.4</priority>
