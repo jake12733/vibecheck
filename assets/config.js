@@ -4,7 +4,7 @@
  */
 window.VIBE_CONFIG = {
   // 1) 커스텀 도메인 구매 후 변경 (예: 'https://vibecheck.kr')
-  siteUrl: 'https://jake12733.github.io/vibecheck',
+  siteUrl: 'https://polyshiplab.com',
 
   // 2) 프리랜서 보안·리팩토링 의뢰 실제 수신 채널 (원하는 것 1개 이상 입력)
   contactEmail: '',           // 예: 'security@vibecheck.kr' (입력 시 mailto 자동 연동)
@@ -12,7 +12,7 @@ window.VIBE_CONFIG = {
   formspreeEndpoint: '',      // 예: 'https://formspree.io/f/xxxxxxxx' (무료 월 50건 이메일 자동 발송!)
 
   // 3) 구글 애드센스 승인 후 게시자 ID 입력 (예: 'ca-pub-1234567890123456')
-  adsenseClient: '',
+  adsenseClient: 'ca-pub-1573419461895141',
 
   // 4) 제휴 마케팅 링크 (실제 Affiliate/Referral 링크 발급 후 교체)
   affiliates: [
