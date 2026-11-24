@@ -39,6 +39,8 @@
     if (!s) return null;
     const m1 = s.match(/(?:https?:\/\/)?(?:www\.)?github\.com\/([A-Za-z0-9_.-]+)\/([A-Za-z0-9_.-]+)/i);
     if (m1) return { owner: m1[1], repo: m1[2].replace(/\.git$/i, '') };
+    const mPages = s.match(/(?:https?:\/\/)?([A-Za-z0-9-]+)\.github\.io\/([A-Za-z0-9_.-]+)/i);
+    if (mPages) return { owner: mPages[1], repo: mPages[2] };
     const m2 = s.match(/^([A-Za-z0-9_.-]+)\/([A-Za-z0-9_.-]+)$/);
     if (m2) return { owner: m2[1], repo: m2[2].replace(/\.git$/i, '') };
     return null;
@@ -270,10 +272,11 @@
         }
       }
 
-      // XSS / eval checks on JS/TS/HTML
+      // XSS / eval checks on JS/TS/HTML (distinguish sanitized/escaped vs raw innerHTML)
       if (/\.(?:html|js|ts|jsx|tsx|vue)$/i.test(f.path)) {
         const xssM = text.match(/dangerouslySetInnerHTML|\.innerHTML\s*=/g) || [];
-        if (xssM.length) xssHits.push({ path: f.path, count: xssM.length });
+        const hasSanitizer = /DOMPurify\.sanitize|\besc\s*\(/i.test(text);
+        if (xssM.length) xssHits.push({ path: f.path, count: xssM.length, sanitized: hasSanitizer });
         const evalM = text.match(/\beval\s*\(|new\s+Function\s*\(/g) || [];
         if (evalM.length) evalHits.push({ path: f.path, count: evalM.length });
       }
@@ -325,18 +328,30 @@
     }
 
     if (xssHits.length) {
+      const rawHits = xssHits.filter((x) => !x.sanitized);
       const totX = xssHits.reduce((a, b) => a + b.count, 0);
-      securityDeduct += Math.min(16, 6 + xssHits.length * 3);
-      findings.push({
-        category: 'security', severity: 'high',
-        titleKo: `잠재적 XSS 싱크(innerHTML / dangerouslySetInnerHTML) ${totX}곳`,
-        titleEn: `${totX} Potential XSS Sink(s) (innerHTML / dangerouslySetInnerHTML)`,
-        descKo: `사용자 입력이나 외부 데이터가 DOMPurify 등의 새니타이저 없이 DOM에 직접 삽입되면 XSS 공격에 노출될 수 있습니다.`,
-        descEn: `Direct HTML injection sinks detected across ${xssHits.length} file(s). Ensure untrusted inputs are sanitized with DOMPurify or replaced with textContent.`,
-        file: xssHits.map((x) => `${x.path}(${x.count})`).slice(0, 3).join(', '),
-        fixKo: 'textContent 사용을 권장하며, HTML 삽입이 필수라면 DOMPurify로 새니타이즈하세요.',
-        fixEn: 'Prefer textContent or sanitize with DOMPurify before rendering HTML.',
-      });
+      if (rawHits.length) {
+        securityDeduct += Math.min(16, 6 + rawHits.length * 3);
+        findings.push({
+          category: 'security', severity: 'high',
+          titleKo: `이스케이프 미확인 XSS 싱크(innerHTML / dangerouslySetInnerHTML) ${rawHits.reduce((a, b) => a + b.count, 0)}곳`,
+          titleEn: `${rawHits.reduce((a, b) => a + b.count, 0)} Unsanitized XSS Sink(s) (innerHTML / dangerouslySetInnerHTML)`,
+          descKo: `사용자 입력이나 외부 데이터가 DOMPurify 등의 새니타이저 없이 DOM에 직접 삽입되면 XSS 공격에 노출될 수 있습니다.`,
+          descEn: `Direct HTML injection sinks detected without a visible sanitizer across ${rawHits.length} file(s).`,
+          file: rawHits.map((x) => `${x.path}(${x.count})`).slice(0, 3).join(', '),
+          fixKo: 'textContent 사용을 권장하며, HTML 삽입이 필수라면 DOMPurify로 새니타이즈하세요.',
+          fixEn: 'Prefer textContent or sanitize with DOMPurify before rendering HTML.',
+        });
+      } else {
+        findings.push({
+          category: 'security', severity: 'pass',
+          titleKo: `DOM 삽입 구간(${totX}곳) 이스케이프/새니타이징 적용 확인`,
+          titleEn: `HTML Escaping / Sanitizer Detected Around ${totX} DOM Sink(s)`,
+          descKo: 'innerHTML 사용 파일에 이스케이프(esc) 또는 DOMPurify 호출이 함께 적용되어 있습니다.',
+          descEn: 'Escaping or DOMPurify sanitization is present alongside DOM HTML rendering.',
+          file: xssHits.map((x) => x.path).slice(0, 3).join(', '),
+        });
+      }
     }
 
     if (evalHits.length) {

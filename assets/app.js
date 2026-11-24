@@ -14,7 +14,7 @@
       tokenOpt: '⚙ GitHub Personal Token 입력 (선택 · 미입력 시 시간당 60회 / 입력 시 5,000회)',
       tokenNote: '공개 저장소는 토큰 없이 바로 진단 가능합니다. 단시간에 여러 레포를 연속 검사할 때만 입력하세요.',
       adSlotTop: '바이브코딩으로 만든 프로젝트, <b>Vercel · Cloudflare Pages · Supabase</b> 무료 티어로 3분 만에 배포하세요.',
-      btnSaveCard: '결과 이미지 카드 저장 (PNG)', btnCopyShare: 'X·레딧 공유 문구 복사',
+      btnSaveCard: '결과 이미지 카드 저장 (PNG)', btnCopyLink: '결과 링크 복사', btnCopyBadge: 'README 배지 복사', btnCopyShare: 'X·레딧 공유 문구 복사',
       stratALabel: 'STRATEGY A · VIBE-CODING INDEX', funTag: '재미 · 패턴 진단', vibePure: 'AI 순도',
       vibeDisclaimer: '* 커밋 규모·AI 설정파일·주석 스타일·스택 조합을 정적 분석한 재미·참고용 지표이며, AI 사용 여부를 법적·학술적으로 단정하지 않습니다.',
       stratBLabel: 'STRATEGY B · SECURITY & QUALITY AUDIT', factTag: '100% 객관적 팩트',
@@ -45,7 +45,7 @@
       tokenOpt: '⚙ Optional GitHub Token (60 req/hr without token · 5,000 req/hr with token)',
       tokenNote: 'Public repos work with zero setup. Only add a token if scanning many repos rapidly.',
       adSlotTop: 'Shipped with vibe coding? Deploy cleanly on <b>Vercel · Cloudflare Pages · Supabase</b> free tiers in 3 minutes.',
-      btnSaveCard: 'Download Result Card (PNG)', btnCopyShare: 'Copy X / Reddit Share Text',
+      btnSaveCard: 'Download Result Card (PNG)', btnCopyLink: 'Copy Result Link', btnCopyBadge: 'Copy README Badge', btnCopyShare: 'Copy X / Reddit Share Text',
       stratALabel: 'STRATEGY A · VIBE-CODING INDEX', funTag: 'Fun Heuristic', vibePure: 'Vibe Purity',
       vibeDisclaimer: '* Entertaining static heuristic based on commit bursts, AI config files, comment style, and stack mix — not a legal or academic AI detector.',
       stratBLabel: 'STRATEGY B · SECURITY & QUALITY AUDIT', factTag: '100% Objective Facts',
@@ -60,6 +60,15 @@
       ctaTitle: 'Found Security Leaks or Messy Vibe-Code?<br>Get It Production-Hardened in 24 Hours.',
       ctaDesc: 'We clean up leaked keys, lock down auth/XSS, fix SEO & Core Web Vitals, and refactor bloated vibe-coded MVPs into clean production apps.',
       ctaBtn: 'Request Security & Code Refactor →', ctaSub: 'Average quote within 2 hours · Audit summary attached',
+      faqTitle: 'Frequently Asked Questions',
+      faq1Q: 'Is my source code or GitHub token ever uploaded to a server?',
+      faq1A: 'No. VIBECHECK is a 100% client-side static tool with zero backend database. Your pasted code and optional token stay strictly in browser memory.',
+      faq2Q: 'Does a high Vibe-Coding Index (%) mean bad code?',
+      faq2A: 'Not at all. Strategy A is a fun heuristic measuring AI-assisted velocity & stack patterns. For actual launch safety, rely on Strategy B (Security & Quality Health Grade A+~F).',
+      faq3Q: 'Can I paste a deployed GitHub Pages URL (username.github.io/repo)?',
+      faq3A: 'Yes! Pasting https://owner.github.io/repo automatically resolves and audits the underlying owner/repo GitHub repository.',
+      faq4Q: 'What if I have a private repo or hit the 60 req/hr unauthenticated GitHub limit?',
+      faq4A: 'Use the "Paste Code / HTML Directly" tab for unlimited offline static scanning, or supply an optional GitHub Personal Token for 5,000 req/hr.',
       ftrSub: 'GitHub Vibe-Coding Index & AI Security/Quality Auditor',
       ftrPrivacy: 'All analysis runs locally in your browser. Neither your code nor optional tokens are sent to any third-party backend.',
       fixModalTitle: 'Request Security & Refactor Fix', fixModalSub: 'Your scanned repository and critical findings are pre-filled below. Leave your contact to receive a fast fix quote.',
@@ -302,6 +311,22 @@
 
   $('#downloadCardBtn').onclick = downloadCardPng;
   $('#dlCardBtn2').onclick = downloadCardPng;
+  $('#copyLinkBtn').onclick = () => {
+    if (!currentReport) return;
+    const base = (window.VIBE_CONFIG?.siteUrl || (location.origin + location.pathname)).replace(/\/$/, '');
+    const deep = currentReport.repoUrl ? `${base}/?repo=${encodeURIComponent(currentReport.repoFullName)}` : `${base}/`;
+    navigator.clipboard?.writeText(deep);
+    toast(lang === 'en' ? 'Direct result link copied!' : '진단 결과 딥링크(?repo=...)가 복사되었습니다!');
+  };
+  $('#copyBadgeBtn').onclick = () => {
+    if (!currentReport) return;
+    const base = (window.VIBE_CONFIG?.siteUrl || (location.origin + location.pathname)).replace(/\/$/, '');
+    const color = currentReport.audit.score >= 85 ? '00e5a0' : currentReport.audit.score >= 65 ? 'f59e0b' : 'f43f5e';
+    const label = encodeURIComponent(`Grade ${currentReport.audit.grade} | Vibe ${currentReport.vibe.score}%`);
+    const md = `[![VIBECHECK Audit](https://img.shields.io/badge/VIBECHECK-${label}-${color}?style=flat-square)](${base}/?repo=${encodeURIComponent(currentReport.repoFullName)})`;
+    navigator.clipboard?.writeText(md);
+    toast(lang === 'en' ? 'GitHub README badge Markdown copied!' : 'GitHub README.md용 배지 마크다운이 복사되었습니다!');
+  };
   $('#copyShareBtn').onclick = () => {
     if (!currentReport) return;
     navigator.clipboard?.writeText(buildShareText(currentReport));

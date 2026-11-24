@@ -6,6 +6,7 @@
 <title>VIBECHECK — GitHub 바이브코딩 지수 측정기 & AI 보안·품질 건강검진기</title>
 <meta name="description" content="GitHub URL 하나로 10초 만에 바이브코딩 순도(%)와 API 키 노출·보안 구멍·SEO·코드 품질을 무료로 정적 진단하고 결과 이미지 카드로 공유하세요.">
 <meta name="keywords" content="바이브코딩 지수, GitHub 보안 진단, API 키 노출 확인, .env 노출 복구, vibe coding auditor, github security scanner">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
 <link rel="canonical" href="https://jake12733.github.io/vibecheck/">
 <!-- 구글 서치콘솔 / 네이버 서치어드바이저 소유권 인증 메타 슬롯 (도메인 등록 시 주석 해제 후 코드 입력) -->
 <!-- <meta name="google-site-verification" content="GOOGLE_VERIFICATION_CODE_HERE"> -->
@@ -14,18 +15,35 @@
 <meta property="og:description" content="GitHub URL 입력만으로 API 비용 0원 정적 분석! 바이브코딩 지수 측정 + API 키 노출·보안·SEO 자동 진단 + 공유용 결과 카드 생성.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://jake12733.github.io/vibecheck/">
+<meta property="og:image" content="https://jake12733.github.io/vibecheck/assets/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://jake12733.github.io/vibecheck/assets/og-image.png">
 <meta name="theme-color" content="#080a0f">
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
-  "@type": "SoftwareApplication",
-  "name": "VIBECHECK",
-  "applicationCategory": "DeveloperApplication",
-  "operatingSystem": "Web Browser",
-  "url": "https://jake12733.github.io/vibecheck/",
-  "description": "Free client-side GitHub Vibe-Coding Purity Index and AI Security, API-Key Leak & SEO Static Auditor.",
-  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "KRW" }
+  "@graph": [
+    {
+      "@type": "SoftwareApplication",
+      "name": "VIBECHECK",
+      "applicationCategory": "DeveloperApplication",
+      "operatingSystem": "Web Browser",
+      "url": "https://jake12733.github.io/vibecheck/",
+      "image": "https://jake12733.github.io/vibecheck/assets/og-image.png",
+      "description": "Free client-side GitHub Vibe-Coding Purity Index and AI Security, API-Key Leak & SEO Static Auditor.",
+      "offers": { "@type": "Offer", "price": "0", "priceCurrency": "KRW" }
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        { "@type": "Question", "name": "내 코드나 GitHub 토큰이 외부 서버로 전송되나요?", "acceptedAnswer": { "@type": "Answer", "text": "아니요. VIBECHECK은 백엔드 서버가 없는 100% 브라우저 실행 도구이며, 코드와 토큰은 기기 밖으로 저장되지 않습니다." } },
+        { "@type": "Question", "name": "바이브코딩 지수가 높으면 나쁜 건가요?", "acceptedAnswer": { "@type": "Answer", "text": "아닙니다. 바이브코딩 지수는 AI 코딩 도구의 빠른 생성 리듬을 재미있게 수치화한 참고 지표이며, 실제 배포 안전성은 우측 보안·품질 건강검진 등급(A+~F)으로 확인하시면 됩니다." } },
+        { "@type": "Question", "name": "GitHub Pages로 배포된 주소(github.io)를 넣어도 되나요?", "acceptedAnswer": { "@type": "Answer", "text": "네, https://username.github.io/repo 형태의 배포 주소를 넣어도 자동으로 해당 GitHub 저장소를 인식해 진단합니다." } }
+      ]
+    }
+  ]
 }
 </script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -147,6 +165,8 @@
       </div>
       <div class="res-actions">
         <button type="button" class="btn-pri" id="downloadCardBtn" data-i18n="btnSaveCard">결과 이미지 카드 저장 (PNG)</button>
+        <button type="button" class="btn-ghost" id="copyLinkBtn" data-i18n="btnCopyLink">결과 링크 복사</button>
+        <button type="button" class="btn-ghost" id="copyBadgeBtn" data-i18n="btnCopyBadge">README 배지 복사</button>
         <button type="button" class="btn-ghost" id="copyShareBtn" data-i18n="btnCopyShare">X·레딧 공유 문구 복사</button>
         <a class="btn-ghost" id="openRepoLink" href="#" target="_blank" rel="noopener noreferrer">GitHub ↗</a>
       </div>
@@ -279,6 +299,32 @@
         <h3 data-i18n="how3T">품질 점수 + 바이럴 이미지 카드</h3>
         <p data-i18n="how3D">SEO 메타태그·테스트 유무·초대형 단일 파일 비대화를 종합 채점하고, 1200×630 고해상도 PNG 결과 카드를 브라우저에서 0.1초 만에 렌더링해 커뮤니티에 바로 공유할 수 있습니다.</p>
       </article>
+    </div>
+  </section>
+
+  <!-- FAQ SECTION (SEO & AdSense Rich Content) -->
+  <section class="faq wrap" id="faq">
+    <div class="sec-h">
+      <span class="mono">FREQUENTLY ASKED QUESTIONS</span>
+      <h2 data-i18n="faqTitle">자주 묻는 질문</h2>
+    </div>
+    <div class="faq-list">
+      <details open>
+        <summary data-i18n="faq1Q">내 소스 코드나 GitHub 토큰이 외부 서버로 전송·저장되나요?</summary>
+        <p data-i18n="faq1A">아니요. VIBECHECK은 백엔드 서버가 없는 100% 브라우저 실행 정적 분석 도구입니다. 입력한 코드와 선택적 토큰은 브라우저 메모리 내에서만 처리되며 외부 서버에 절대 저장되지 않습니다.</p>
+      </details>
+      <details>
+        <summary data-i18n="faq2Q">바이브코딩 순도(%)가 높게 나오면 나쁜 코드인가요?</summary>
+        <p data-i18n="faq2A">전혀 아닙니다. 바이브코딩 지수는 AI 코딩 에이전트 활용 리듬과 스택 조합을 재미있게 보여주는 참고 지표이며, 실제 배포 안전성과 코드 건강도는 우측 [전략 B · 보안·품질 등급(A+~F)]을 기준으로 점검하시면 됩니다.</p>
+      </details>
+      <details>
+        <summary data-i18n="faq3Q">GitHub Pages 배포 주소(username.github.io/repo)를 넣어도 진단되나요?</summary>
+        <p data-i18n="faq3A">네! <code>https://owner.github.io/repo</code> 주소를 그대로 붙여넣으셔도 자동으로 원본 GitHub 저장소(<code>owner/repo</code>)를 찾아 정적 보안·품질 진단을 수행합니다.</p>
+      </details>
+      <details>
+        <summary data-i18n="faq4Q">비공개(Private) 저장소나 GitHub 무료 API 한도 초과 시엔 어떻게 하나요?</summary>
+        <p data-i18n="faq4A">상단의 [코드 / HTML 직접 붙여넣기] 탭을 사용하면 GitHub API 호출 없이 무제한 무료로 즉시 진단할 수 있으며, 개인 GitHub Token을 입력하면 시간당 5,000회까지 연속 스캔이 가능합니다.</p>
+      </details>
     </div>
   </section>
 
