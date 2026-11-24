@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>바이브코딩 보안 · SEO · GitHub 트러블슈팅 가이드 — VIBECHECK</title>
+<meta name="description" content="GitHub API 키 노출 복구, 바이브코딩 배포 전 보안 체크리스트 10가지, Supabase RLS 잠금, XSS 제거, node_modules 정리, 구글·네이버 SEO 등록 완벽 가이드.">
+<link rel="canonical" href="https://jake12733.github.io/vibecheck/guides/">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/style.css">
+<link rel="stylesheet" href="../assets/article.css">
+</head>
+<body>
+<header class="hdr">
+  <div class="wrap hdr-in">
+    <a href="../index.html" class="brand"><span class="brand-mark">VC</span><span class="brand-txt">VIBE<b>CHECK</b></span></a>
+    <nav class="nav"><a href="../index.html">무료 진단</a><a href="./" style="color:#fff">보안·SEO 가이드</a><a href="../about.html">서비스 소개</a></nav>
+    <a href="../index.html#scanner" class="btn-pri sm">내 레포 무료 진단 →</a>
+  </div>
+</header>
+
+<main class="doc-wrap" style="max-width:1040px">
+  <div class="crumb"><a href="../index.html">VIBECHECK</a><span>/</span><span>Guides</span></div>
+  <div class="doc-head">
+    <span class="doc-tag">SECURITY & VIBE-CODING PLAYBOOK</span>
+    <h1>바이브코딩 보안 · GitHub 사고 복구 · SEO 실전 가이드</h1>
+    <p>Cursor, Claude, Bolt, Lovable로 만든 프로젝트를 실서비스로 안전하게 배포하고 검색 유입까지 붙이기 위해 반드시 알아야 할 6가지 핵심 실무 가이드입니다.</p>
+  </div>
+
+  <div class="guides-grid">
+    <a href="leaked-api-key-github.html" class="gcard">
+      <span class="mono" style="color:var(--red)">CRITICAL · SECURITY</span>
+      <h3>GitHub에 API 키·.env를 실수로 올렸을 때 5분 만에 복구하는 법</h3>
+      <p>커밋만 되돌리면 절대 안 됩니다. OpenAI·AWS·Stripe·Firebase 키 즉시 폐기부터 Git 히스토리 완전 삭제 명령어까지 정리했습니다.</p>
+      <span class="gmore">가이드 읽기 →</span>
+    </a>
+    <a href="vibe-coding-security-checklist.html" class="gcard">
+      <span class="mono" style="color:var(--em)">PRE-LAUNCH · CHECKLIST</span>
+      <h3>바이브코딩(Cursor·Claude·Bolt) 배포 전 필수 보안 체크리스트 10가지</h3>
+      <p>AI가 빠뜨리기 쉬운 인증 검증, 클라이언트 노출 키, CORS, Rate Limit, XSS, 에러 로그 노출을 배포 직전 10분 만에 점검하세요.</p>
+      <span class="gmore">가이드 읽기 →</span>
+    </a>
+    <a href="nextjs-supabase-rls-guide.html" class="gcard">
+      <span class="mono" style="color:var(--amb)">DATABASE · RLS</span>
+      <h3>바이브코딩 최다 사고 1위: Supabase · Firebase DB 공개 노출 막는 RLS 규칙</h3>
+      <p>프론트엔드 Anon Key만으로 전체 회원 테이블이 털리는 실제 원인과, 복사해서 바로 적용하는 Row Level Security SQL 정책 예시.</p>
+      <span class="gmore">가이드 읽기 →</span>
+    </a>
+    <a href="xss-innerhtml-fix.html" class="gcard">
+      <span class="mono" style="color:var(--amb)">FRONTEND · XSS</span>
+      <h3>AI가 자주 생성하는 innerHTML · dangerouslySetInnerHTML XSS 취약점 해결</h3>
+      <p>검색창·댓글·마크다운 미리보기에서 세션 탈취가 일어나는 원리와 textContent·DOMPurify·CSP 보안 헤더 적용법.</p>
+      <span class="gmore">가이드 읽기 →</span>
+    </a>
+    <a href="fix-node-modules-git.html" class="gcard">
+      <span class="mono" style="color:var(--vio)">GIT HYGIENE</span>
+      <h3>Git에 node_modules·대용량 파일 커밋했을 때 안전하게 정리하는 법</h3>
+      <p>실수로 수만 개 파일이 올라가 저장소가 느려졌을 때 로컬 파일은 유지하면서 Git 추적만 해제하고 .gitignore를 세팅하는 정확한 명령어.</p>
+      <span class="gmore">가이드 읽기 →</span>
+    </a>
+    <a href="github-pages-seo-naver-google.html" class="gcard">
+      <span class="mono" style="color:var(--em)">SEO · ADSENSE</span>
+      <h3>GitHub Pages 무료 사이트 구글·네이버 검색 등록 & 애드센스 승인 체크리스트</h3>
+      <p>robots.txt, sitemap.xml, 커스텀 도메인 CNAME, 서치콘솔·네이버 서치어드바이저 등록부터 가치 없는 콘텐츠 거절을 피하는 실전 요건.</p>
+      <span class="gmore">가이드 읽기 →</span>
+    </a>
+  </div>
+
+  <div class="guide-cta">
+    <div>
+      <h3>내 프로젝트에 위 보안 구멍이 있는지 10초 만에 자동 스캔</h3>
+      <p>GitHub URL만 입력하면 API 키 노출·.env·XSS·SEO 누락을 무료로 찾아드립니다.</p>
+    </div>
+    <a href="../index.html#scanner" class="btn-pri">VIBECHECK 무료 진단 →</a>
+  </div>
+</main>
+
+<footer class="ftr">
+  <div class="wrap ftr-in">
+    <div><b>VIBECHECK</b> · <a href="./">가이드</a> · <a href="../about.html">소개</a> · <a href="../privacy.html">개인정보처리방침</a> · <a href="../terms.html">이용약관</a></div>
+    <span class="mono">© 2026 VIBECHECK</span>
+  </div>
+</footer>
+</body>
+</html>

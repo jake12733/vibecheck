@@ -5,7 +5,7 @@
 
   const I18N = {
     ko: {
-      navScan: '무료 진단', navHow: '측정 원리', navFix: '보안 수정 의뢰', btnHistory: '최근 기록',
+      navScan: '무료 진단', navGuides: '보안·SEO 가이드', navHow: '측정 원리', navFix: '보안 수정 의뢰', btnHistory: '최근 기록',
       heroBadge: 'API 비용 0원 · 100% 브라우저 정적 분석 · 로그인 불필요',
       heroTitle: '내 프로젝트, <em>AI 냄새 몇 %</em>?<br>그리고 <em>보안 폭탄</em>은 없을까?',
       heroSub: 'GitHub 공개 저장소 URL만 넣으면 커밋 패턴·AI 흔적·API 키 노출·보안 구멍·SEO를 10초 만에 정적 진단하고, X·레딧·긱뉴스 공유용 결과 카드를 즉시 만들어 드립니다.',
@@ -36,7 +36,7 @@
       histTitle: '최근 진단 기록 (이 브라우저 저장)',
     },
     en: {
-      navScan: 'Free Scan', navHow: 'How It Works', navFix: 'Hire Security Fix', btnHistory: 'History',
+      navScan: 'Free Scan', navGuides: 'Security Guides', navHow: 'How It Works', navFix: 'Hire Security Fix', btnHistory: 'History',
       heroBadge: '$0 API Cost · 100% Client-Side Static Audit · No Login',
       heroTitle: 'How <em>AI-Vibed</em> is Your Repo?<br>Any <em>Security Timebombs</em> Inside?',
       heroSub: 'Paste any public GitHub URL to measure its Vibe-Coding Purity Index (%) and run an objective Security, API-Key Leak & SEO audit in 10 seconds — plus export a viral 1200×630 PNG badge card.',
@@ -321,21 +321,66 @@
   $('#openFixFromCard').onclick = openFixModal;
   $('#closeFixModal').onclick = () => { $('#fixModal').hidden = true; };
   $('#fixModal').onclick = (e) => { if (e.target === e.currentTarget) e.currentTarget.hidden = true; };
-  $('#fixForm').onsubmit = (e) => {
+  $('#fixForm').onsubmit = async (e) => {
     e.preventDefault();
-    const summary = `[VIBECHECK 보안/리팩토링 의뢰]\n• 대상: ${$('#fixRepo').value}\n• 연락처: ${$('#fixContact').value}\n• 내용:\n${$('#fixNotes').value}`;
+    const cfg = window.VIBE_CONFIG || {};
+    const repo = $('#fixRepo').value.trim();
+    const contact = $('#fixContact').value.trim();
+    const notes = $('#fixNotes').value.trim();
+    const summary = `[VIBECHECK 보안/리팩토링 의뢰]\n• 대상: ${repo}\n• 연락처: ${contact}\n• 내용:\n${notes}`;
     try {
       const saved = JSON.parse(localStorage.getItem('vc_leads') || '[]');
-      saved.unshift({ repo: $('#fixRepo').value, contact: $('#fixContact').value, notes: $('#fixNotes').value, t: new Date().toISOString() });
+      saved.unshift({ repo, contact, notes, t: new Date().toISOString() });
       localStorage.setItem('vc_leads', JSON.stringify(saved.slice(0, 20)));
     } catch {}
     navigator.clipboard?.writeText(summary).catch(() => {});
+
+    let sentRemote = false;
+    if (cfg.formspreeEndpoint) {
+      try {
+        const res = await fetch(cfg.formspreeEndpoint, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+          body: JSON.stringify({ repo, contact, notes, source: location.href }),
+        });
+        if (res.ok) sentRemote = true;
+      } catch {}
+    }
+
+    const actions = [];
+    if (cfg.kakaoOpenChatUrl) {
+      actions.push(`<a class="btn-pri sm" style="background:#fee500;color:#191919" href="${esc(cfg.kakaoOpenChatUrl)}" target="_blank" rel="noopener noreferrer">${lang === 'en' ? 'Open KakaoTalk Chat ↗' : '카카오톡 오픈채팅 바로 연결 ↗'}</a>`);
+    }
+    if (cfg.contactEmail) {
+      const mailHref = `mailto:${encodeURIComponent(cfg.contactEmail)}?subject=${encodeURIComponent('[VIBECHECK 보안/수정 의뢰] ' + repo)}&body=${encodeURIComponent(summary)}`;
+      actions.push(`<a class="btn-ghost sm" href="${mailHref}">${lang === 'en' ? 'Send via Email ↗' : '이메일 앱으로 바로 전송 ↗'}</a>`);
+    }
+    const statusMsg = sentRemote
+      ? (lang === 'en' ? '✓ Request delivered directly to the engineer! We will reply within 2 hours.' : '✓ 담당자에게 실시간 이메일 알림이 전송되었습니다! 2시간 이내에 견적을 회신드립니다.')
+      : (lang === 'en' ? '✓ Audit request summary copied to clipboard!' : '✓ 의뢰서 요약이 생성되어 클립보드에 복사되었습니다!');
+    const cfgHint = (!sentRemote && !cfg.kakaoOpenChatUrl && !cfg.contactEmail)
+      ? `<div style="margin-top:6px;font-size:11.5px;color:var(--ink2)">${lang === 'en' ? '(Tip for owner: set contactEmail / kakaoOpenChatUrl / formspreeEndpoint in assets/config.js to receive live leads.)' : '(운영자 안내: assets/config.js에 이메일·카톡 오픈채팅·Formspree를 입력하면 고객 의뢰가 실시간 수신됩니다.)'}</div>`
+      : '';
     const box = $('#fixResult');
     box.hidden = false;
-    box.innerHTML = lang === 'en'
-      ? '✓ Request logged & summary copied to clipboard! We will review your audit report and reply within 2 hours.'
-      : '✓ 의뢰서가 정상 생성되고 클립보드에 자동 복사되었습니다! 남겨주신 연락처로 2시간 이내에 해결 견적을 안내드립니다.';
+    box.innerHTML = `<div>${statusMsg}</div>${actions.length ? `<div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px">${actions.join('')}</div>` : ''}${cfgHint}`;
   };
+
+  // Auto-load Google AdSense & affiliate links from central config.js when configured
+  (function initConfigIntegrations() {
+    const cfg = window.VIBE_CONFIG || {};
+    if (cfg.adsenseClient && /^ca-pub-\d+$/.test(cfg.adsenseClient)) {
+      const s = document.createElement('script');
+      s.async = true;
+      s.crossOrigin = 'anonymous';
+      s.src = `https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${encodeURIComponent(cfg.adsenseClient)}`;
+      document.head.appendChild(s);
+    }
+    if (Array.isArray(cfg.affiliates) && cfg.affiliates.length) {
+      const al = $('.ad-links');
+      if (al) al.innerHTML = cfg.affiliates.map((a) => `<a href="${esc(a.url)}" target="_blank" rel="noopener noreferrer">${esc(a.name)} ↗</a>`).join('');
+    }
+  })();
 
   $('#openHistoryBtn').onclick = () => {
     const list = getHistory();

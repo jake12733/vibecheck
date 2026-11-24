@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>GitHub에 API 키·.env 실수로 올렸을 때 5분 만에 복구하는 법 — VIBECHECK</title>
+<meta name="description" content="OpenAI, AWS, Stripe, Firebase API 키나 .env 파일을 GitHub 공개 저장소에 실수로 커밋했을 때 즉시 피해를 막는 키 폐기 및 Git 히스토리 삭제 완벽 가이드.">
+<link rel="canonical" href="https://jake12733.github.io/vibecheck/guides/leaked-api-key-github.html">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/style.css">
+<link rel="stylesheet" href="../assets/article.css">
+</head>
+<body>
+<header class="hdr">
+  <div class="wrap hdr-in">
+    <a href="../index.html" class="brand"><span class="brand-mark">VC</span><span class="brand-txt">VIBE<b>CHECK</b></span></a>
+    <nav class="nav"><a href="../index.html">무료 진단</a><a href="./">보안·SEO 가이드</a><a href="../about.html">서비스 소개</a></nav>
+    <a href="../index.html#scanner" class="btn-pri sm">내 레포 키 노출 점검 →</a>
+  </div>
+</header>
+
+<main class="doc-wrap">
+  <div class="crumb"><a href="../index.html">VIBECHECK</a><span>/</span><a href="./">Guides</a><span>/</span><span>Leaked API Key</span></div>
+  <div class="doc-head">
+    <span class="doc-tag">CRITICAL SECURITY · 사고 복구</span>
+    <h1>GitHub에 API 키·.env를 실수로 올렸을 때<br>5분 만에 복구하는 정확한 순서</h1>
+    <p>GitHub 공개(Public) 저장소에 OpenAI(<code>sk-</code>), AWS(<code>AKIA</code>), Stripe(<code>sk_live_</code>) 키를 푸시하면 <strong>평균 10~30초 이내에 자동화 크롤링 봇이 키를 수집</strong>해 무단 과금을 일으킵니다. 단순히 파일만 지우고 다시 커밋해서는 절대 안전하지 않습니다.</p>
+    <div class="doc-meta"><span>UPDATED 2026-11-25</span><span>READ TIME: 4 MIN</span><span>KR / EN KEYWORDS: GITHUB LEAKED API KEY FIX</span></div>
+  </div>
+
+  <article class="prose">
+    <div class="callout warn">
+      <b>가장 먼저 할 일 (Step 0): Git 정리보다 "키 폐기(Revoke)"가 1순위입니다!</b>
+      <p>이미 공개 저장소에 1초라도 올라간 키는 유출된 것으로 간주해야 합니다. Git 히스토리를 지우는 동안에도 봇은 이미 훔쳐간 키로 결제 요청을 보낼 수 있습니다. 반드시 <strong>서비스 콘솔에서 기존 키를 먼저 삭제(Revoke)하고 새 키를 재발급</strong>하세요.</p>
+    </div>
+
+    <h2>1단계: 주요 플랫폼별 1분 키 폐기 체크리스트</h2>
+    <ul>
+      <li><strong>OpenAI / Anthropic</strong>: API Keys 콘솔 → 유출된 <code>sk-...</code> 키 즉시 Delete → Usage Limit(월 상한) 설정 후 새 키 발급</li>
+      <li><strong>AWS</strong>: IAM → Users → Security Credentials → 노출된 <code>AKIA...</code> 액세스 키 <strong>Deactivate & Delete</strong> → CloudTrail에서 무단 EC2 생성 여부 확인</li>
+      <li><strong>Stripe</strong>: Developers → API Keys → <code>sk_live_...</code> Roll Key 즉시 실행</li>
+      <li><strong>GitHub Token</strong>: Settings → Developer Settings → Personal Access Tokens → Revoke</li>
+      <li><strong>Firebase / Google API Key</strong>: 클라이언트용 <code>AIza...</code> 키는 공개되어도 정상인 경우가 있으나, 반드시 <strong>Google Cloud Console에서 HTTP 리퍼러(내 도메인) 제한</strong>과 API 사용 범위 제한을 걸어야 과금 폭탄을 막을 수 있습니다.</li>
+    </ul>
+
+    <h2>2단계: .gitignore에 .env 추가 후 추적 해제</h2>
+    <p>앞으로 실수가 재발하지 않도록 루트 경로의 <code>.gitignore</code>에 환경변수 파일을 반드시 등록합니다.</p>
+<pre><code># .gitignore
+.env
+.env.local
+.env.*.local
+.env.production
+*.pem
+*.key
+firebase-adminsdk*.json</code></pre>
+    <p>이미 커밋된 <code>.env</code>를 내 PC에서는 유지하면서 Git 추적만 끊으려면 아래 명령을 실행합니다.</p>
+<pre><code>git rm --cached .env
+git add .gitignore
+git commit -m "chore: stop tracking .env and add to gitignore"
+git push</code></pre>
+
+    <h2>3단계: 과거 Git 커밋 히스토리에서 파일 완전 소거</h2>
+    <p><code>git rm --cached</code>만 실행하면 이전 커밋 로그를 클릭했을 때 여전히 <code>.env</code> 내용이 보입니다. 과거 기록까지 깨끗이 지우려면 공식 권장 도구인 <code>git-filter-repo</code>를 사용하세요.</p>
+<pre><code># 1) git-filter-repo 설치 (Python pip)
+pip install git-filter-repo
+
+# 2) 전체 커밋 히스토리에서 .env 파일 완전 제거
+git filter-repo --invert-paths --path .env --force
+
+# 3) 원격 저장소 강제 덮어쓰기 (팀 프로젝트는 사전 공유 필수)
+git push origin --force --all
+git push origin --force --tags</code></pre>
+
+    <h2>4단계: 프론트엔드 정적 사이트에서 API 키를 숨기는 정석 구조</h2>
+    <p>바이브코딩으로 만든 HTML/React/Vite 앱에서 <code>VITE_OPENAI_API_KEY</code>처럼 브라우저 번들에 키를 넣으면 개발자 도구(F12)에서 누구나 볼 수 있습니다. 비밀키가 필요한 호출은 반드시 <strong>Cloudflare Workers, Vercel Serverless Functions, Supabase Edge Functions</strong> 같은 무료 서버리스 프록시를 거쳐 호출하세요.</p>
+  </article>
+
+  <div class="guide-cta">
+    <div>
+      <h3>내 저장소에 혹시 남은 API 키나 .env가 있을까요?</h3>
+      <p>VIBECHECK 무료 정적 스캐너로 지금 바로 10초 만에 전체 파일 트리와 소스를 점검해 보세요.</p>
+    </div>
+    <a href="../index.html#scanner" class="btn-pri">무료 API 키 노출 스캔 →</a>
+  </div>
+</main>
+
+<footer class="ftr">
+  <div class="wrap ftr-in">
+    <div><b>VIBECHECK</b> · <a href="./">가이드</a> · <a href="../about.html">소개</a> · <a href="../privacy.html">개인정보처리방침</a> · <a href="../terms.html">이용약관</a></div>
+    <span class="mono">© 2026 VIBECHECK</span>
+  </div>
+</footer>
+</body>
+</html>

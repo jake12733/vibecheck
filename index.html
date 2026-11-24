@@ -5,10 +5,29 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>VIBECHECK — GitHub 바이브코딩 지수 측정기 & AI 보안·품질 건강검진기</title>
 <meta name="description" content="GitHub URL 하나로 10초 만에 바이브코딩 순도(%)와 API 키 노출·보안 구멍·SEO·코드 품질을 무료로 정적 진단하고 결과 이미지 카드로 공유하세요.">
+<meta name="keywords" content="바이브코딩 지수, GitHub 보안 진단, API 키 노출 확인, .env 노출 복구, vibe coding auditor, github security scanner">
+<link rel="canonical" href="https://jake12733.github.io/vibecheck/">
+<!-- 구글 서치콘솔 / 네이버 서치어드바이저 소유권 인증 메타 슬롯 (도메인 등록 시 주석 해제 후 코드 입력) -->
+<!-- <meta name="google-site-verification" content="GOOGLE_VERIFICATION_CODE_HERE"> -->
+<!-- <meta name="naver-site-verification" content="NAVER_VERIFICATION_CODE_HERE"> -->
 <meta property="og:title" content="VIBECHECK — 내 프로젝트, AI 냄새 몇 %? & 보안 건강검진">
 <meta property="og:description" content="GitHub URL 입력만으로 API 비용 0원 정적 분석! 바이브코딩 지수 측정 + API 키 노출·보안·SEO 자동 진단 + 공유용 결과 카드 생성.">
 <meta property="og:type" content="website">
+<meta property="og:url" content="https://jake12733.github.io/vibecheck/">
+<meta name="twitter:card" content="summary_large_image">
 <meta name="theme-color" content="#080a0f">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "VIBECHECK",
+  "applicationCategory": "DeveloperApplication",
+  "operatingSystem": "Web Browser",
+  "url": "https://jake12733.github.io/vibecheck/",
+  "description": "Free client-side GitHub Vibe-Coding Purity Index and AI Security, API-Key Leak & SEO Static Auditor.",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "KRW" }
+}
+</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -25,6 +44,7 @@
     </a>
     <nav class="nav">
       <a href="#scanner" data-i18n="navScan">무료 진단</a>
+      <a href="guides/" data-i18n="navGuides">보안·SEO 가이드</a>
       <a href="#how" data-i18n="navHow">측정 원리</a>
       <a href="#audit-cta" data-i18n="navFix">보안 수정 의뢰</a>
     </nav>
@@ -283,6 +303,7 @@
     <div>
       <b>VIBECHECK</b> · <span data-i18n="ftrSub">GitHub 바이브코딩 지수 측정기 & AI 보안·품질 건강검진기</span>
       <p class="ftr-note" data-i18n="ftrPrivacy">모든 검사는 사용자의 브라우저에서 직접 실행되며, 입력한 코드나 GitHub 토큰은 외부 서버에 저장되지 않습니다.</p>
+      <p class="ftr-note" style="margin-top:8px"><a href="guides/" style="color:var(--ink2)">보안·SEO 가이드</a> · <a href="about.html" style="color:var(--ink2)">서비스 소개</a> · <a href="privacy.html" style="color:var(--ink2)">개인정보처리방침</a> · <a href="terms.html" style="color:var(--ink2)">이용약관</a></p>
     </div>
     <span class="mono">© 2026 VIBECHECK · STATIC CLIENT-SIDE ENGINE</span>
   </div>
@@ -319,6 +340,7 @@
 
 <div class="toast" id="toast"></div>
 
+<script src="assets/config.js"></script>
 <script src="assets/analyzer.js"></script>
 <script src="assets/share-card.js"></script>
 <script src="assets/app.js"></script>
