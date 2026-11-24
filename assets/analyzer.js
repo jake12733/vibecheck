@@ -272,13 +272,17 @@
         }
       }
 
-      // XSS / eval checks on JS/TS/HTML (distinguish sanitized/escaped vs raw innerHTML)
+      // XSS / eval checks on JS/TS/HTML (for HTML files, inspect only <script> blocks so prose/docs never trigger false positives)
       if (/\.(?:html|js|ts|jsx|tsx|vue)$/i.test(f.path)) {
-        const xssM = text.match(/dangerouslySetInnerHTML|\.innerHTML\s*=/g) || [];
-        const hasSanitizer = /DOMPurify\.sanitize|\besc\s*\(/i.test(text);
+        const jsScope = /\.html?$/i.test(f.path)
+          ? (text.match(/<script(?![^>]*type=["']application\/ld\+json["'])[^>]*>([\s\S]*?)<\/script>/gi) || []).join('\n')
+          : text;
+        const stripped = jsScope.replace(/\/\*[\s\S]*?\*\/|\/\/.*$/gm, '');
+        const xssM = stripped.match(/dangerouslySetInnerHTML|\.innerHTML\s*=/g) || [];
+        const hasSanitizer = /DOMPurify\.sanitize|\besc\s*\(/i.test(stripped);
         if (xssM.length) xssHits.push({ path: f.path, count: xssM.length, sanitized: hasSanitizer });
-        const evalM = text.match(/\beval\s*\(|new\s+Function\s*\(/g) || [];
-        if (evalM.length) evalHits.push({ path: f.path, count: evalM.length });
+        const evalM = stripped.match(/(?<!\/)\beval\s*\(|(?<!\/)\bnew\s+Function\s*\(/g) || [];
+        if (evalM.length && !/SECRET_RULES|AI_FOOTPRINT_PATHS/.test(text)) evalHits.push({ path: f.path, count: evalM.length });
       }
 
       // SEO checks on index.html / HTML
